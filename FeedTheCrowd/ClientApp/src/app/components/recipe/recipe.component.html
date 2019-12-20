@@ -1,0 +1,112 @@
+<div *ngIf="recipe">
+    <div class="row">
+        <div class="col-sm-6">
+            <h2>{{recipe.title}}</h2>
+        </div>
+        <div class="col-sm-6">
+            <form *ngIf="isLoggedIn()" [formGroup]="addTo" (ngSubmit)="addRecipeToEvent()">
+                <button type="submit" class="col-sm-3 btn-success">Add to Event:</button>
+
+                <select class="col-sm-7" formControlName="event" ng-model="data.singleSelect">
+                    <option *ngFor="let item of myEvents" value={{item.id}}>{{item.title}}</option>
+                </select>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 center">
+            <div *ngIf="recipe.image === '' || !recipe.image ; else Show">
+                <img src="../../../assets/placeholder.png" class="resize">
+            </div>
+            <ng-template #Show>
+                <img src="{{recipe.image}}" class="resize">
+            </ng-template>
+        </div>
+        <div class="col-sm-6" class="container4">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h6>Preparation Time</h6>
+                </div>
+                <div class="col-sm-2">
+                    <p>{{recipe.time}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <h6>Servings</h6>
+                </div>
+                <div class="col-sm-2">
+                    <p>{{amount}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <h5>Ingredients</h5>
+        </div>
+        <div class="col-sm-3">
+            <form [formGroup]="newInfo" (ngSubmit)="calculateProducts()">
+                <input type="number" value="{{amount}}" formControlName="amount">
+            </form>
+        </div>
+        <div class="col-sm-1">
+            <button type="submit" class="btn-primary" (click)="calculateProducts()">Calculate</button>
+        </div>
+    </div>
+    <div *ngFor="let product of recipeProducts">
+        <div class="row">
+            <div class="col-sm-6" class="center">
+                {{product.quantity | number}}
+            </div>
+            <div class="col-sm-6">
+                {{product.name}}
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <h6>Description</h6>
+    </div>
+    <div class="row">
+        <p>{{recipe.description}}</p>
+    </div>
+    <h6>Comments</h6>
+    <hr class="style2">
+    <div *ngFor="let com of comments">
+        <div class="row">
+            <div class="col-sm-3">
+                <div *ngIf="com.userPic === null" class="row center">
+                    <img src="../../../assets/profile-icon.png" class="rounded-circle img">
+                </div>
+                <div *ngIf="com.userPic != null" class="row center">
+                    <img src="{{com.userPic}}" class="rounded-circle img">
+                </div>
+                <div class="row center smallFont">
+                    <span style="font-weight: bold;">{{com.user}}</span>
+                </div>
+            </div>
+            <div class="col-sm-9">
+                <div class="row">
+                    <div class="col-sm-10">
+                        <h6>{{com.textField}}</h6>
+                    </div>
+                    <div class="col-sm-2 right smallFont">
+                        <span>{{com.dateCreated | date:'yyyy-MM-dd hh:mm:ss'}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="style5">
+    </div>
+    <div *ngIf="isLoggedIn()">
+        <form [formGroup]="newCom" (ngSubmit)="postComment()">
+            <input class="col-sm-10" style="width: 100%" type="text" formControlName="textField" required>
+
+            <div class="col-sm-2 right">
+                <button type="submit" class="btn-primary">Post comment</button>
+            </div>
+        </form>
+    </div>
+    <br/>
+</div>
